@@ -5,15 +5,16 @@ MAINTAINER Jessie.chen <jccode.chen@gmail.com>
 ENV DEBIAN_FRONTEND noninteractive
 
 
-# apt source
-ARG APT_MIRROR="http://mirrors.163.com"
+# apt source ("http://mirrors.163.com")
+ARG APT_MIRROR=
 RUN /bin/bash -c 'if [[ -n "$APT_MIRROR" ]]; then sed -i 's#http://archive.ubuntu.com#$APT_MIRROR#g' /etc/apt/sources.list; fi'
 
 
 # packages
 RUN apt-get -y install \
     git \
-    build-essential
+    build-essential \
+    xterm
 
 ARG HOME=/root
 
@@ -32,4 +33,9 @@ ADD .emacs.d/ $HOME/.emacs.d/
 RUN apt-get autoclean && apt-get autoremove
 
 
-ENTRYPOINT ["bash", "-c", "fcitx; /bin/bash"]
+# ENTRYPOINT ["bash", "-c", "fcitx; /bin/bash; "]
+
+ADD docker-entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["docker-entrypoint.sh"]
+
+CMD ["/bin/bash"]
