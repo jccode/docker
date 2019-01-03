@@ -11,15 +11,18 @@ RUN /bin/bash -c 'if [[ -n "$APT_MIRROR" ]]; then sed -i 's#http://archive.ubunt
 
 
 # packages
+RUN apt-get update --fix-missing
 RUN apt-get -y install \
     git \
+    software-properties-common \
     build-essential \
     xterm
+
 
 ARG HOME=/root
 
 # emacs config
-RUN git clone -b http https://github.com/jccode/emacs.git $HOME/emacs \
+RUN git clone https://github.com/jccode/emacs.git $HOME/emacs \
     && cd $HOME/emacs \
     && git submodule init \
     && git submodule update \
@@ -29,8 +32,35 @@ RUN git clone -b http https://github.com/jccode/emacs.git $HOME/emacs \
 ADD .emacs.d/ $HOME/.emacs.d/
 
 
+
+# ledger
+
+## build dependencies
+# RUN apt-get -y install cmake doxygen \
+#      libboost-system-dev libboost-dev python-dev gettext git \
+#      libboost-date-time-dev libboost-filesystem-dev \
+#      libboost-iostreams-dev libboost-python-dev libboost-regex-dev \
+#      libboost-test-dev libedit-dev libgmp3-dev libmpfr-dev texinfo
+
+## clone & build
+# RUN git clone https://github.com/ledger/ledger /tmp/ledger && \
+#     cd /tmp/ledger && \
+# 	git submodule update --init && \
+# 	./acprep make && \
+# 	make check && \
+# 	make install && \
+# 	cd / && \
+#     rm -rf /tmp/ledger
+
+RUN add-apt-repository ppa:mbudde/ledger && \
+    apt-get update && \
+    apt-get -y install ledger
+
+
+
 # clean
 RUN apt-get autoclean && apt-get autoremove
+
 
 
 # ENTRYPOINT ["bash", "-c", "fcitx; /bin/bash; "]
