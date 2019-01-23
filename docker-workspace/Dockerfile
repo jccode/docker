@@ -21,15 +21,23 @@ RUN apt-get -y install \
 
 ARG HOME=/root
 
-# emacs config
-RUN git clone https://github.com/jccode/emacs.git $HOME/emacs \
-    && cd $HOME/emacs \
-    && git submodule init \
-    && git submodule update \
-    && cd plugins/haskell-mode \
-    && make haskell-mode-autoloads.el
+## emacs config
+# RUN git clone https://github.com/jccode/emacs.git $HOME/emacs \
+#     && cd $HOME/emacs \
+#     && git submodule init \
+#     && git submodule update \
+#     && cd plugins/haskell-mode \
+#     && make haskell-mode-autoloads.el
+
+ADD build.el /tmp/build.el
+RUN git clone https://github.com/jccode/emacs.d.git $HOME/emacs \
+	&& cd $HOME/emacs \
+    # && emacs -nw --batch --eval '(progn (load-file "~/emacs/init.el") (all-the-icons-install-fonts 1))'
+    && emacs -nw --batch --script /tmp/build.el \
+    && rm /tmp/build.el
 
 ADD .emacs.d/ $HOME/.emacs.d/
+
 
 
 
