@@ -24,5 +24,5 @@ Usage
 
     Run directly
 
-        docker run --rm --name workspace -e DISPLAY="$DISPLAY" -v "/c:/windows/c" -v "/d:/windows/d" -v "/e:/windows/e" -v "/f:/windows/f" -v "/c/Users/01372461/ownCloud:/root/ownCloud" jcchen/workspace:latest emacs
+        docker run --rm --name workspace -e DISPLAY="$DISPLAY" -v "/c:/windows/c" -v "/d:/windows/d" -v "/e:/windows/e" -v "/f:/windows/f" -v "/c/Users/01372461/ownCloud:/root/ownCloud" -p 1313:1313 jcchen/workspace:latest emacs
 

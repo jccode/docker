@@ -38,6 +38,8 @@ RUN git clone https://github.com/jccode/emacs.d.git $HOME/emacs \
 
 ADD .emacs.d/ $HOME/.emacs.d/
 
+# Fix org mode issue
+RUN rm -rf $HOME/.emacs.d/elpa/org*/*.elc
 
 
 
@@ -63,6 +65,12 @@ ADD .emacs.d/ $HOME/.emacs.d/
 RUN add-apt-repository ppa:mbudde/ledger && \
     apt-get update && \
     apt-get -y install ledger
+
+
+
+# blog (hugo)
+RUN apt-get -y install hugo
+EXPOSE 1313
 
 
 
