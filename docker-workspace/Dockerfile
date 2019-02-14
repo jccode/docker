@@ -70,6 +70,10 @@ RUN add-apt-repository ppa:mbudde/ledger && \
 
 # blog (hugo)
 RUN apt-get -y install hugo
+RUN git clone https://github.com/jcchen9416/blog.git $HOME/blog \
+	&& cd $HOME/blog \
+	&& git submodule init \
+	&& git submodule update
 EXPOSE 1313
 
 
