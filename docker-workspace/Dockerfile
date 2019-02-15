@@ -69,11 +69,16 @@ RUN add-apt-repository ppa:mbudde/ledger && \
 
 
 # blog (hugo)
+ARG BLOG_DIR=$HOME/code/blog
 RUN apt-get -y install hugo
-RUN git clone https://github.com/jcchen9416/blog.git $HOME/blog \
-	&& cd $HOME/blog \
+RUN git clone https://github.com/jcchen9416/blog.git $BLOG_DIR \
+	&& cd $BLOG_DIR \
 	&& git submodule init \
-	&& git submodule update
+	&& git submodule update \
+	&& git config user.name jcchen9416 && git config user.email jcchen9416@gmail.com \
+	&& cd $BLOG_DIR/public \
+	&& git checkout master \
+	&& git config user.name jcchen9416 && git config user.email jcchen9416@gmail.com
 EXPOSE 1313
 
 
