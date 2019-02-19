@@ -29,12 +29,15 @@ ARG HOME=/root
 #     && cd plugins/haskell-mode \
 #     && make haskell-mode-autoloads.el
 
+
+RUN apt-get -y install curl
 ADD build.el /tmp/build.el
 RUN git clone https://github.com/jccode/emacs.d.git $HOME/emacs \
 	&& cd $HOME/emacs \
     # && emacs -nw --batch --eval '(progn (load-file "~/emacs/init.el") (all-the-icons-install-fonts 1))'
-    && emacs -nw --batch --script /tmp/build.el \
-    && rm /tmp/build.el
+	&& emacs -nw --batch --script /tmp/build.el \
+	&& git config user.name jcchen.code && git config user.email jcchen.code@gmail.com \
+	&& rm /tmp/build.el
 
 ADD .emacs.d/ $HOME/.emacs.d/
 
