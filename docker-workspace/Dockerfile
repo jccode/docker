@@ -45,6 +45,11 @@ ADD .emacs.d/ $HOME/.emacs.d/
 RUN rm -rf $HOME/.emacs.d/elpa/org*/*.elc
 
 
+# emacs epa, gpg
+RUN git clone https://github.com/ecraven/pinentry-emacs.git $HOME/.emacs.d/pinentry-emacs
+ADD .gnupg $HOME/.gnupg
+
+
 
 # ledger
 
