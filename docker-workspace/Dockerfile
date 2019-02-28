@@ -96,6 +96,12 @@ RUN apt-get autoclean && apt-get autoremove
 
 
 
+# Add files
+RUN mkdir $HOME/bin
+ADD one-time-init.sh $HOME/bin
+
+
+
 # ENTRYPOINT ["bash", "-c", "fcitx; /bin/bash; "]
 
 ADD docker-entrypoint.sh /usr/local/bin/
