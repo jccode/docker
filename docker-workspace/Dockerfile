@@ -13,13 +13,62 @@ RUN /bin/bash -c 'if [[ -n "$APT_MIRROR" ]]; then sed -i 's#http://archive.ubunt
 # packages
 RUN apt-get update --fix-missing
 RUN apt-get -y install \
-    git \
-    software-properties-common \
-    build-essential \
-    xterm
+	git \
+	software-properties-common \
+	build-essential \
+	xterm \
+	wget \
+	curl
+
 
 
 ARG HOME=/root
+
+
+
+#
+# Common lisp
+#
+## --------------------
+
+# ccl (Clozure CL)
+# RUN wget -q https://github.com/Clozure/ccl/releases/download/v1.11.5/ccl-1.11.5-linuxx86.tar.gz \
+# 	&& mkdir -p /usr/local/src \
+# 	&& tar -C /usr/local/src -xf ccl-1.11.5-linuxx86.tar.gz
+
+# ENV "PATH" "$PATH:/usr/local/src/ccl/scripts/"
+
+
+# ccl
+ENV CCL_VERSION 1.10
+RUN mkdir -p /usr/local/src \
+	&& cd /usr/local/src \
+	&& curl -SL "ftp://ftp.clozure.com/pub/release/${CCL_VERSION}/ccl-${CCL_VERSION}-linuxx86.tar.gz" | tar xzv --exclude='.svn' --exclude='examples' \
+	&& ln -s /usr/local/src/ccl/scripts/ccl64 /usr/local/bin/ccl
+
+
+# quicklisp
+# RUN  curl -SLO https://beta.quicklisp.org/release-key.txt \
+# 	&& curl -SLO https://beta.quicklisp.org/quicklisp.lisp \
+# 	&& curl -SLO https://beta.quicklisp.org/quicklisp.lisp.asc \
+# 	&& gpg --import release-key.txt \
+# 	&& gpg --verify quicklisp.lisp.asc quicklisp.lisp \
+# 	&& echo "(quicklisp-quickstart:install)(let ((ql-util::*do-not-prompt* t))(ql:add-to-init-file))(ccl:quit 0)" >> quicklisp.lisp \
+# 	&& ccl --load quicklisp.lisp \
+# 	&& rm release-key.txt quicklisp.lisp quicklisp.lisp.asc
+
+
+# RUN wget -O /quicklisp.lisp https://beta.quicklisp.org/quicklisp.lisp \
+# 	&& ccl --batch --load /quicklisp.lisp --eval "(quicklisp-quickstart:install)"
+# ADD .ccl-init.lisp $HOME/.ccl-init.lisp
+
+
+RUN cd /tmp && curl -O https://beta.quicklisp.org/quicklisp.lisp \
+	&& echo "(load \"quicklisp.lisp\") (quicklisp-quickstart:install :path \"/opt/quicklisp\") (ql::without-prompting (ql:add-to-init-file))" | ccl
+
+
+
+
 
 ## emacs config
 # RUN git clone https://github.com/jccode/emacs.git $HOME/emacs \
@@ -91,15 +140,15 @@ EXPOSE 1313
 
 
 
+
+
 # clean
 RUN apt-get autoclean && apt-get autoremove
-
 
 
 # Add files
 RUN mkdir $HOME/bin
 ADD one-time-init.sh $HOME/bin
-
 
 
 # ENTRYPOINT ["bash", "-c", "fcitx; /bin/bash; "]
