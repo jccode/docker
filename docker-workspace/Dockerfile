@@ -25,6 +25,11 @@ RUN apt-get -y install \
 ARG HOME=/root
 
 
+#
+# latex
+#
+RUN apt-get -y install dvipng texlive texlive-latex-extra
+
 
 #
 # Common lisp
@@ -137,8 +142,6 @@ RUN git clone https://github.com/jcchen9416/blog.git $BLOG_DIR \
 	&& git checkout master \
 	&& git config user.name jcchen9416 && git config user.email jcchen9416@gmail.com
 EXPOSE 1313
-
-
 
 
 
